@@ -19,7 +19,7 @@ services:
   # Feature 17: Human Triage Interface
   aria-dashboard:
     build:
-      context: ./02-dashboard-ui
+      context: ../02-dashboard-ui
       dockerfile: Dockerfile
     container_name: aria-dashboard
     image: aria-dashboard:latest
@@ -43,13 +43,13 @@ services:
   # Feature 07: Fidelity Ranking (runs inside gateway)
   aria-gateway:
     build:
-      context: ./01-reverse-proxy-gateway
+      context: ../01-reverse-proxy-gateway
       dockerfile: Dockerfile
     container_name: aria-gateway
     ports:
       - "80:80"
       - "443:443"
-      - "8000-8100:8000-8100"   # Dynamic listener ports for protected services
+      - "8001-8100:8001-8100"   # Dynamic listener ports for protected services
     environment:
       - MONGODB_URI=mongodb://mongo:27017/aria_db
       - REDIS_URI=redis://redis:6379
@@ -96,7 +96,7 @@ services:
     image: mongo:6.0
     container_name: aria-mongo
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo_data:/data/db
     networks:
