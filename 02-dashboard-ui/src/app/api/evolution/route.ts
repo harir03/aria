@@ -43,7 +43,7 @@ export async function GET(request: Request) {
         });
     } catch (error) {
         const msg = error instanceof Error ? error.message : 'Unknown error';
-        logger.error({ error: msg }, 'Failed to fetch evolution changes');
+        logger.error('Failed to fetch evolution changes', msg);
         return NextResponse.json({ success: false, error: msg }, { status: 500 });
     }
 }
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
         if (body.action === 'trigger') {
             // This would publish to Redis to trigger the self-evolving agent
             // For now, just log the request
-            logger.info({ trigger: body.trigger, type: body.type }, 'Manual evolution trigger requested');
+            logger.info('Manual evolution trigger requested', { trigger: body.trigger, type: body.type });
             return NextResponse.json({
                 success: true,
                 message: 'Evolution trigger sent — agent will process on next cycle',
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: false, error: 'Unknown action' }, { status: 400 });
     } catch (error) {
         const msg = error instanceof Error ? error.message : 'Unknown error';
-        logger.error({ error: msg }, 'Failed to process evolution request');
+        logger.error('Failed to process evolution request', msg);
         return NextResponse.json({ success: false, error: msg }, { status: 500 });
     }
 }

@@ -45,7 +45,7 @@ export async function GET(request: Request) {
         });
     } catch (error) {
         const msg = error instanceof Error ? error.message : 'Unknown error';
-        logger.error({ error: msg }, 'Failed to fetch playbooks');
+        logger.error('Failed to fetch playbooks', msg);
         return NextResponse.json({ success: false, error: msg }, { status: 500 });
     }
 }
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
                 forceLLM: forceLLM || false,
             }));
 
-            logger.info({ incidentId, alertId }, 'Playbook generation requested');
+            logger.info('Playbook generation requested', { incidentId, alertId });
             return NextResponse.json({
                 success: true,
                 message: 'Playbook generation requested — will appear shortly',
@@ -82,11 +82,11 @@ export async function POST(request: Request) {
 
         // Direct playbook creation (from template or manual)
         const playbook = await Playbook.create(body);
-        logger.info({ playbookId: playbook._id }, 'Playbook created');
+        logger.info('Playbook created', { playbookId: playbook._id });
         return NextResponse.json({ success: true, data: playbook }, { status: 201 });
     } catch (error) {
         const msg = error instanceof Error ? error.message : 'Unknown error';
-        logger.error({ error: msg }, 'Failed to create playbook');
+        logger.error('Failed to create playbook', msg);
         return NextResponse.json({ success: false, error: msg }, { status: 500 });
     }
 }

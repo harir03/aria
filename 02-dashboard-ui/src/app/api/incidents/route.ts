@@ -49,7 +49,7 @@ export async function GET(request: Request) {
         });
     } catch (error) {
         const msg = error instanceof Error ? error.message : 'Unknown error';
-        logger.error({ error: msg }, 'Failed to fetch incidents');
+        logger.error('Failed to fetch incidents', msg);
         return NextResponse.json({ success: false, error: msg }, { status: 500 });
     }
 }
@@ -61,11 +61,11 @@ export async function POST(request: Request) {
         const body = await request.json();
         const incident = await Incident.create(body);
 
-        logger.info({ incidentId: incident._id }, 'Incident created');
+        logger.info('Incident created', { incidentId: incident._id });
         return NextResponse.json({ success: true, data: incident }, { status: 201 });
     } catch (error) {
         const msg = error instanceof Error ? error.message : 'Unknown error';
-        logger.error({ error: msg }, 'Failed to create incident');
+        logger.error('Failed to create incident', msg);
         return NextResponse.json({ success: false, error: msg }, { status: 500 });
     }
 }

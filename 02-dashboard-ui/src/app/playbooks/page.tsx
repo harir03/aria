@@ -154,24 +154,24 @@ export default function PlaybooksPage() {
             {/* Stats Row */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <StatCard
-                    title="Total Playbooks"
+                    label="Total Playbooks"
                     value={(stats.total ?? 0).toLocaleString()}
-                    icon={<BookOpen className="w-5 h-5 text-teal-500" />}
+                    icon={BookOpen}
                 />
                 <StatCard
-                    title="Pending Review"
+                    label="Pending Review"
                     value={(stats.generated ?? 0).toLocaleString()}
-                    icon={<Clock className="w-5 h-5 text-blue-500" />}
+                    icon={Clock}
                 />
                 <StatCard
-                    title="Approved"
+                    label="Approved"
                     value={(stats.approved ?? 0).toLocaleString()}
-                    icon={<CheckCircle2 className="w-5 h-5 text-green-500" />}
+                    icon={CheckCircle2}
                 />
                 <StatCard
-                    title="Completed"
+                    label="Completed"
                     value={(stats.completed ?? 0).toLocaleString()}
-                    icon={<Shield className="w-5 h-5 text-emerald-500" />}
+                    icon={Shield}
                 />
             </div>
 

@@ -357,7 +357,7 @@ export default function EvolutionPage() {
                                         fontSize: "11px",
                                         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                                     }}
-                                    formatter={(value: number) => [`${value}`, "Score"]}
+                                    formatter={(value: number | undefined) => [`${value ?? ''}`, "Score"]}
                                 />
                                 <Bar dataKey="score" radius={[4, 4, 0, 0]}>
                                     {recentScores.map((entry, i) => (
