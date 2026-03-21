@@ -19,7 +19,7 @@ services:
   # Feature 17: Human Triage Interface
   aria-dashboard:
     build:
-      context: ../02-dashboard-ui
+      context: ../apps/dashboard
       dockerfile: Dockerfile
     container_name: aria-dashboard
     image: aria-dashboard:latest
@@ -43,7 +43,7 @@ services:
   # Feature 07: Fidelity Ranking (runs inside gateway)
   aria-gateway:
     build:
-      context: ../01-reverse-proxy-gateway
+      context: ../apps/gateway
       dockerfile: Dockerfile
     container_name: aria-gateway
     ports:
@@ -68,26 +68,25 @@ services:
   # Feature 06: Behavioral Analytics / UEBA
   # Feature 08: Alert Correlation (LangGraph)
   # Feature 13: Predictive Analysis
-  # TODO: Create Dockerfile and Python service
-  # aria-detection:
-  #   build:
-  #     context: ./detection
-  #     dockerfile: Dockerfile
-  #   container_name: aria-detection
-  #   ports:
-  #     - "5000:5000"
-  #   environment:
-  #     - MONGODB_URI=mongodb://mongo:27017/aria_db
-  #     - REDIS_URI=redis://redis:6379
-  #     - OLLAMA_HOST=http://aria-ai:11434
-  #     - CHROMADB_HOST=http://chromadb:8000
-  #   depends_on:
-  #     - mongo
-  #     - redis
-  #     - chromadb
-  #   networks:
-  #     - aria-network
-  #   restart: always
+  aria-detection:
+    build:
+      context: ../services
+      dockerfile: detection/Dockerfile
+    container_name: aria-detection
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/aria_db
+      - REDIS_URI=redis://redis:6379
+      - OLLAMA_HOST=http://aria-ai:11434
+      - CHROMADB_HOST=http://chromadb:8000
+    depends_on:
+      - mongo
+      - redis
+      - chromadb
+    networks:
+      - aria-network
+    restart: always
 
   # ── MongoDB 6.0 ────────────────────────────────────────────────────────
   # Stores: alerts, incidents, feedback, learned patterns, playbooks,
@@ -170,6 +169,84 @@ services:
     environment:
       - IS_PERSISTENT=TRUE
       - ANONYMIZED_TELEMETRY=FALSE
+    networks:
+      - aria-network
+    restart: always
+
+  # ── Background Workers ──────────────────────────────────────────────────
+  aria-alert-correlation:
+    build:
+      context: ../services/alert-correlation
+    container_name: aria-alert-correlation
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/aria_db
+      - REDIS_URI=redis://redis:6379
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - aria-network
+    restart: always
+
+  aria-playbook-generation:
+    build:
+      context: ../services/playbook-generation
+    container_name: aria-playbook-generation
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/aria_db
+      - REDIS_URI=redis://redis:6379
+      - OLLAMA_HOST=http://aria-ai:11434
+    depends_on:
+      - mongo
+      - redis
+      - aria-ai
+    networks:
+      - aria-network
+    restart: always
+
+  aria-self-evolving-agent:
+    build:
+      context: ../services/self-evolving-agent
+    container_name: aria-self-evolving-agent
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/aria_db
+      - REDIS_URI=redis://redis:6379
+      - OLLAMA_HOST=http://aria-ai:11434
+    depends_on:
+      - mongo
+      - redis
+      - aria-ai
+    networks:
+      - aria-network
+    restart: always
+
+  aria-model-finetuning:
+    build:
+      context: ../services/model-finetuning
+    container_name: aria-model-finetuning
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/aria_db
+      - REDIS_URI=redis://redis:6379
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - aria-network
+    restart: always
+
+  # ── ChromaDB Capture Worker ──────────────────────────────────────────
+  aria-vector-memory:
+    build:
+      context: ../services/vector-memory
+    container_name: aria-vector-memory
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/aria_db
+      - REDIS_URI=redis://redis:6379
+      - CHROMADB_HOST=http://chromadb:8000
+    depends_on:
+      - mongo
+      - redis
+      - chromadb
     networks:
       - aria-network
     restart: always
