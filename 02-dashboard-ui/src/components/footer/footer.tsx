@@ -8,7 +8,7 @@ export function Footer() {
             <div className="container mx-auto px-6">
                 <div className="mb-12 overflow-hidden">
                     <CurvedLoop 
-                      marqueeText="Built ✦ With ✦ ❤️ ✦ in ✦ Innerve ✦ "
+                      marqueeText="Built ✦ With ✦ ❤️ ✦ by ✦ Team ✦ Aria ✦ "
                       speed={2}
                       curveAmount={100}
                       direction="right"

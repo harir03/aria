@@ -3,7 +3,7 @@ import { logger } from './logger';
 
 // [ARIA] REMOVED: const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/maf_db';
 // [ARIA] NEW: Default database name changed from maf_db to aria_db
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/aria_db';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27018/aria_db';
 
 if (!MONGODB_URI) {
     throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
