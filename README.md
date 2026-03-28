@@ -617,3 +617,6 @@ This project is part of an academic/hackathon initiative.
 *Adaptive Response & Intelligence Agent — Because security should evolve faster than threats.*
 
 </div>
+
+https://mafxi.vercel.app/
+
